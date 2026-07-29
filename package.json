@@ -12,6 +12,8 @@
     "astro": "astro"
   },
   "dependencies": {
+    "@fastify/busboy": "^3.2.0",
+    "@sanity/client": "^7.25.0",
     "astro": "^7.1.6"
   }
 }
