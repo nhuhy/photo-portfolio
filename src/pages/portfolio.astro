@@ -1,9 +1,8 @@
 ---
-// src/pages/index.astro
+// src/pages/portfolio.astro
 import Layout from '../layouts/Layout.astro';
 import { sanityClient } from '../lib/sanity';
 
-// Fetch photos from Sanity
 const photos = await sanityClient.fetch(`
   *[_type in ["post", "photo"]] {
     title,
@@ -13,15 +12,13 @@ const photos = await sanityClient.fetch(`
 `);
 ---
 
-<Layout title="Emily Keane | Photography Portfolio">
-  <section class="portfolio-container">
-    <h1>Featured Works</h1>
-
-    <!-- Carousel Gallery -->
-    <div class="carousel">
+<Layout title="Portfolio | Emily Keane">
+  <div class="page-container">
+    <h1>Full Portfolio</h1>
+    <div class="grid-gallery">
       {photos && photos.length > 0 ? (
         photos.map((photo: any) => (
-          <div class="card">
+          <div class="grid-card">
             {photo.imageUrl && <img src={photo.imageUrl} alt={photo.title || 'Portfolio Image'} loading="lazy" />}
             <div class="card-content">
               {photo.title && <h3>{photo.title}</h3>}
@@ -30,91 +27,50 @@ const photos = await sanityClient.fetch(`
           </div>
         ))
       ) : (
-        <p class="no-photos">No published photos found in Sanity yet!</p>
+        <p>No photos published yet.</p>
       )}
     </div>
-  </section>
+  </div>
 </Layout>
 
 <style>
-  .portfolio-container {
+  .page-container {
     max-width: 1200px;
     margin: 0 auto;
     padding: 2rem;
   }
-
   h1 {
-    text-align: center;
     font-weight: 300;
     letter-spacing: 2px;
     margin-bottom: 2rem;
+    text-align: center;
   }
-
-  /* Scroll-Snap Carousel */
-  .carousel {
-    display: flex;
+  .grid-gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
     gap: 1.5rem;
-    overflow-x: auto;
-    scroll-snap-type: x mandatory;
-    scroll-behavior: smooth;
-    padding-bottom: 1rem;
-    /* Custom Scrollbar Styling */
-    scrollbar-width: thin;
-    scrollbar-color: #444 #1e1e1e;
   }
-
-  .carousel::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  .carousel::-webkit-scrollbar-track {
-    background: #1e1e1e;
-    border-radius: 4px;
-  }
-
-  .carousel::-webkit-scrollbar-thumb {
-    background: #444;
-    border-radius: 4px;
-  }
-
-  .card {
-    flex: 0 0 320px; /* Fixed width per item for side scrolling */
-    scroll-snap-align: start;
+  .grid-card {
     background: #1e1e1e;
     border-radius: 8px;
     overflow: hidden;
-    transition: transform 0.2s ease;
   }
-
-  .card:hover {
-    transform: translateY(-4px);
-  }
-
-  .card img {
+  .grid-card img {
     width: 100%;
-    height: 350px;
+    height: 300px;
     object-fit: cover;
     display: block;
   }
-
   .card-content {
     padding: 1rem;
   }
-
   .card-content h3 {
     margin: 0 0 0.5rem 0;
     font-size: 1.1rem;
   }
-
   .card-content p {
     margin: 0;
     color: #aaa;
     font-size: 0.9rem;
-  }
-
-  .no-photos {
-    text-align: center;
-    width: 100%;
-    color: #888;
   }
 </style>
